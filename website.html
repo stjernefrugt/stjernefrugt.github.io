@@ -46,14 +46,51 @@
 				<!-- Main -->
                 <div id="main">
 
-                    <!-- Post -->
+					<!-- Post -->
+					<section class="post">
+						<header class="major">
+							<span class="date">February 2, 2020</span>
+							<h1>Adding a map</h1>
+							<p></p>
+						</header>
+						<div class="image main"><img src="images/website/map01.png" alt="" /></div>
+						<p>Today i worked on adding a map generated from .gpx files using Python in jupyter notebook and mplleaflet. It took a while to filter the data to avoid mapping the drive also, and it is slow when plotting all 12000 gps points</p>
+						<h2>Example code for making a mplleaflet map of the hiking trail</h2>
+						<pre><code>
+	# import dependencies and load gps coordiates from ,gpx files
+	%matplotlib notebook
+	from PhotoTrails import *
+	import os
+	from glob import glob
+	path = os.getcwd()
+	TripName='1910_SEKI'
+	paths=PhotoTrailsls(path=path,TripName=TripName,DoPrint=False)
+	gpx_data=load_gpx_data(gpx_path=paths.get("Trails")+'/')
+	
+	# filter based on datetime stamp
+	df=df[(df['datetime'] > '2019-10-02 16:00:00') & (df['datetime'] < '2019-10-06 12:25:00')]
+	
+	# plot with a different color for each day hiked
+	fig, ax = plt.subplots()
+	colors = plt.cm.jet(np.linspace(0,1,len(df.groupby('Day'))+2))
+	cc=0
+	for idx, day in df.groupby('Day'):
+		plt.plot(day['Point_Longitude'][::10], day['Point_Latitude'][::10], color=colors[idx], linewidth=0, alpha=0.5,marker='*')
+		cc=cc+1
+	
+	mplleaflet.save_html(fig=fig,fileobj='mplleaflet_simpel.html',tiles='esri_aerial')
+	mplleaflet.display(fig=fig, tiles='esri_aerial')
+						</code></pre>
+						<p>I will go oiver the PhotoTrails.py library another time as i am trying to make some general scripts. Basically for this purpose I load several .gpx files from a folder into pandas dataframes</p>
+					</section>
+
                         <section class="post">
                             <header class="major">
                                 <span class="date">February 1, 2020</span>
                                 <h1>This website</h1>
                                 <p>Here I woill describe the process of making this website.</p>
                             </header>
-                            <div class="image main"><img src="images/pic01.jpg" alt="" /></div>
+                            <div class="image main"><img src="images/website/website01.png" alt="" /></div>
                             <p>Today I chose the HTML5UP template masively for this page</p>
 							<p>I want it to be centered around hiking but also give me the option of documenting and sharing information on other fun projects I work on.</p>
 							<p>As soon as the skeleton of this page is working, I will be woirking more specifically on generating maps, tracks, stats and photos from my hikes</p>
@@ -62,6 +99,9 @@
 
 
                         </section>
+
+
+
 
                 </div>
 
